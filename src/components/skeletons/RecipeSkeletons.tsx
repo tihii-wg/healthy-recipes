@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 export function RecipeCardSkeleton() {
   return (
     <div className="overflow-hidden rounded-3xl border border-stone-100 bg-white shadow-sm">
@@ -16,8 +18,10 @@ export function RecipeCardSkeleton() {
 }
 
 export function RecipeGridSkeleton({ count = 8 }: { count?: number }) {
+  const { t } = useTranslation()
   return (
-    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4" role="status">
+      <span className="sr-only">{t('loading.recipes')}</span>
       {Array.from({ length: count }, (_, index) => (
         <RecipeCardSkeleton key={index} />
       ))}
@@ -26,8 +30,10 @@ export function RecipeGridSkeleton({ count = 8 }: { count?: number }) {
 }
 
 export function RecipeDetailsSkeleton() {
+  const { t } = useTranslation()
   return (
-    <div className="space-y-8">
+    <div className="space-y-8" role="status">
+      <span className="sr-only">{t('loading.recipe')}</span>
       <div className="aspect-[16/9] w-full animate-pulse rounded-[2rem] bg-stone-200" />
       <div className="h-10 w-2/3 animate-pulse rounded-full bg-stone-200" />
       <div className="space-y-2">

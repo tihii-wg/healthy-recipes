@@ -2,72 +2,20 @@ import type { RecipeSearchParams } from '../types/recipe'
 
 export type CategoryDefinition = {
   slug: string
-  label: string
-  description: string
   params: RecipeSearchParams
 }
 
 export const CATEGORIES: CategoryDefinition[] = [
-  {
-    slug: 'breakfast',
-    label: 'Breakfast',
-    description: 'Bright mornings with protein-forward starts.',
-    params: { mealType: 'breakfast' },
-  },
-  {
-    slug: 'lunch',
-    label: 'Lunch',
-    description: 'Midday meals that keep you going.',
-    params: { mealType: 'lunch' },
-  },
-  {
-    slug: 'dinner',
-    label: 'Dinner',
-    description: 'Satisfying plates for the end of the day.',
-    params: { mealType: 'dinner' },
-  },
-  {
-    slug: 'healthy',
-    label: 'Healthy',
-    description: 'Recipes ranked for overall healthiness.',
-    params: { query: 'healthy', sort: 'healthiness' },
-  },
-  {
-    slug: 'high-protein',
-    label: 'High Protein',
-    description: 'At least 25g of protein per serving.',
-    params: { minProtein: 25 },
-  },
-  {
-    slug: 'low-carb',
-    label: 'Low Carb',
-    description: 'Meals with 20g of carbs or fewer.',
-    params: { maxCarbs: 20 },
-  },
-  {
-    slug: 'vegetarian',
-    label: 'Vegetarian',
-    description: 'Vegetable-first cooking without meat.',
-    params: { diet: 'vegetarian' },
-  },
-  {
-    slug: 'vegan',
-    label: 'Vegan',
-    description: 'Plant-based recipes from Spoonacular’s vegan filter.',
-    params: { diet: 'vegan' },
-  },
-  {
-    slug: 'dessert',
-    label: 'Desserts',
-    description: 'Sweeter finishes, still from real recipes.',
-    params: { mealType: 'dessert' },
-  },
-  {
-    slug: 'snack',
-    label: 'Snack',
-    description: 'Smaller bites between meals.',
-    params: { mealType: 'snack' },
-  },
+  { slug: 'breakfast', params: { mealType: 'breakfast' } },
+  { slug: 'lunch', params: { mealType: 'lunch' } },
+  { slug: 'dinner', params: { mealType: 'dinner' } },
+  { slug: 'healthy', params: { query: 'healthy', sort: 'healthiness' } },
+  { slug: 'high-protein', params: { minProtein: 25 } },
+  { slug: 'low-carb', params: { maxCarbs: 20 } },
+  { slug: 'vegetarian', params: { diet: 'vegetarian' } },
+  { slug: 'vegan', params: { diet: 'vegan' } },
+  { slug: 'dessert', params: { mealType: 'dessert' } },
+  { slug: 'snack', params: { mealType: 'snack' } },
 ]
 
 export const HOME_CATEGORIES = CATEGORIES.filter((category) =>

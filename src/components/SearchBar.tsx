@@ -1,4 +1,5 @@
 import { useEffect, useId, useState, type FormEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 export function SearchBar({
@@ -12,6 +13,7 @@ export function SearchBar({
   onSearch?: (query: string) => void
   onQueryChange?: (query: string) => void
 }) {
+  const { t } = useTranslation()
   const [query, setQuery] = useState(initialQuery)
   const fieldId = useId()
   const navigate = useNavigate()
@@ -33,7 +35,7 @@ export function SearchBar({
   return (
     <form onSubmit={handleSubmit} role="search" className="flex w-full gap-2">
       <label className="sr-only" htmlFor={fieldId}>
-        Search recipes
+        {t('search.label')}
       </label>
       <input
         id={fieldId}
@@ -43,7 +45,7 @@ export function SearchBar({
           setQuery(next)
           onQueryChange?.(next)
         }}
-        placeholder="Search recipes, ingredients or dishes..."
+        placeholder={t('search.placeholder')}
         className={`min-w-0 flex-1 rounded-full border border-stone-200 bg-white px-5 text-ink shadow-sm placeholder:text-stone-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20 ${
           size === 'lg' ? 'h-14 text-base' : 'h-11 text-sm'
         }`}
@@ -54,7 +56,7 @@ export function SearchBar({
           size === 'lg' ? 'h-14' : 'h-11'
         }`}
       >
-        Search
+        {t('search.button')}
       </button>
     </form>
   )

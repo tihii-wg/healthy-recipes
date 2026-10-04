@@ -1,8 +1,10 @@
 import type { InputHTMLAttributes, SelectHTMLAttributes } from 'react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { Seo } from '../components/Seo'
+import { Pagination } from '../components/Pagination'
 import { RecipeGrid } from '../components/recipe/RecipeGrid'
 import { RecipeGridSkeleton } from '../components/skeletons/RecipeSkeletons'
 import { EmptyState, ErrorState } from '../components/states/Feedback'
@@ -12,20 +14,39 @@ import { queryKeys, STALE_TIME } from '../lib/queryKeys'
 import { searchRecipes } from '../services/recipeService'
 import type { RecipeSearchParams } from '../types/recipe'
 
-const mealTypes = ['breakfast', 'lunch', 'dinner', 'dessert', 'snack', 'salad', 'soup', 'appetizer']
-const diets = ['vegetarian', 'vegan', 'pescetarian', 'ketogenic', 'paleo', 'whole30', 'gluten free']
+const mealTypes = [
+  { value: 'breakfast', labelKey: 'filters.meals.breakfast' },
+  { value: 'lunch', labelKey: 'filters.meals.lunch' },
+  { value: 'dinner', labelKey: 'filters.meals.dinner' },
+  { value: 'dessert', labelKey: 'filters.meals.dessert' },
+  { value: 'snack', labelKey: 'filters.meals.snack' },
+  { value: 'salad', labelKey: 'filters.meals.salad' },
+  { value: 'soup', labelKey: 'filters.meals.soup' },
+  { value: 'appetizer', labelKey: 'filters.meals.appetizer' },
+] as const
+
+const diets = [
+  { value: 'vegetarian', labelKey: 'filters.diets.vegetarian' },
+  { value: 'vegan', labelKey: 'filters.diets.vegan' },
+  { value: 'pescetarian', labelKey: 'filters.diets.pescetarian' },
+  { value: 'ketogenic', labelKey: 'filters.diets.ketogenic' },
+  { value: 'paleo', labelKey: 'filters.diets.paleo' },
+  { value: 'whole30', labelKey: 'filters.diets.whole30' },
+  { value: 'gluten free', labelKey: 'filters.diets.glutenFree' },
+] as const
+
 const cuisines = [
-  'American',
-  'Italian',
-  'Mexican',
-  'Mediterranean',
-  'Indian',
-  'Chinese',
-  'Japanese',
-  'Thai',
-  'French',
-  'Middle Eastern',
-]
+  { value: 'American', labelKey: 'filters.cuisines.american' },
+  { value: 'Italian', labelKey: 'filters.cuisines.italian' },
+  { value: 'Mexican', labelKey: 'filters.cuisines.mexican' },
+  { value: 'Mediterranean', labelKey: 'filters.cuisines.mediterranean' },
+  { value: 'Indian', labelKey: 'filters.cuisines.indian' },
+  { value: 'Chinese', labelKey: 'filters.cuisines.chinese' },
+  { value: 'Japanese', labelKey: 'filters.cuisines.japanese' },
+  { value: 'Thai', labelKey: 'filters.cuisines.thai' },
+  { value: 'French', labelKey: 'filters.cuisines.french' },
+  { value: 'Middle Eastern', labelKey: 'filters.cuisines.middleEastern' },
+] as const
 
 type FilterForm = {
   mealType: string
@@ -62,6 +83,7 @@ function paramsFromSearch(searchParams: URLSearchParams): RecipeSearchParams {
 }
 
 export function RecipesPage() {
+  const { t } = useTranslation()
   const [searchParams, setSearchParams] = useSearchParams()
   const filters = paramsFromSearch(searchParams)
   const page = Math.max(1, Number(searchParams.get('page') ?? '1') || 1)
@@ -112,14 +134,9 @@ export function RecipesPage() {
 
   return (
     <>
-      <Seo
-        title="Discover recipes — Healthy Recipes"
-        description="Browse healthy recipes and filter by meal type, diet, cuisine, calories, protein, carbs, fat, and prep time."
-      />
-      <h1 className="font-display text-4xl">Discover recipes</h1>
-      <p className="mt-2 max-w-2xl text-muted">
-        Search by dish or ingredient, then narrow with the filters Spoonacular actually supports.
-      </p>
+      <Seo title={t('recipes.seoTitle')} description={t('recipes.seoDescription')} />
+      <h1 className="font-display text-4xl">{t('recipes.title')}</h1>
+      <p className="mt-2 max-w-2xl text-muted">{t('recipes.lead')}</p>
       <div className="mt-6 max-w-2xl">
         <SearchBar
           initialQuery={searchParams.get('q') ?? ''}
@@ -137,20 +154,20 @@ export function RecipesPage() {
         onSubmit={form.handleSubmit(applyFilters)}
         className="mt-6 grid gap-3 rounded-3xl bg-white p-4 shadow-sm ring-1 ring-stone-100 md:grid-cols-4"
       >
-        <SelectField label="Meal type" {...form.register('mealType')} options={mealTypes} />
-        <SelectField label="Diet" {...form.register('diet')} options={diets} />
-        <SelectField label="Cuisine" {...form.register('cuisine')} options={cuisines} />
-        <NumberField label="Max calories" {...form.register('maxCalories')} />
-        <NumberField label="Min protein (g)" {...form.register('minProtein')} />
-        <NumberField label="Max carbs (g)" {...form.register('maxCarbs')} />
-        <NumberField label="Max fat (g)" {...form.register('maxFat')} />
-        <NumberField label="Max prep time (min)" {...form.register('maxReadyTime')} />
+        <SelectField label={t('filters.mealType')} {...form.register('mealType')} options={mealTypes} />
+        <SelectField label={t('filters.diet')} {...form.register('diet')} options={diets} />
+        <SelectField label={t('filters.cuisine')} {...form.register('cuisine')} options={cuisines} />
+        <NumberField label={t('filters.maxCalories')} {...form.register('maxCalories')} />
+        <NumberField label={t('filters.minProtein')} {...form.register('minProtein')} />
+        <NumberField label={t('filters.maxCarbs')} {...form.register('maxCarbs')} />
+        <NumberField label={t('filters.maxFat')} {...form.register('maxFat')} />
+        <NumberField label={t('filters.maxReadyTime')} {...form.register('maxReadyTime')} />
         <div className="md:col-span-4">
           <button
             type="submit"
             className="rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark"
           >
-            Apply filters
+            {t('filters.apply')}
           </button>
         </div>
       </form>
@@ -159,22 +176,19 @@ export function RecipesPage() {
         {recipes.isLoading ? <RecipeGridSkeleton /> : null}
         {recipes.isError ? (
           <ErrorState
-            title="Recipes could not be loaded"
-            message={friendlyApiMessage(recipes.error, 'Please try again in a little while.')}
+            title={t('recipes.errorTitle')}
+            message={friendlyApiMessage(recipes.error, 'errors.recipesFallback')}
           />
         ) : null}
         {recipes.data && recipes.data.results.length === 0 ? (
-          <EmptyState
-            title="No recipes match these filters"
-            message="Try a broader search or clear a filter or two."
-          />
+          <EmptyState title={t('recipes.emptyTitle')} message={t('recipes.emptyMessage')} />
         ) : null}
         {recipes.data && recipes.data.results.length > 0 ? (
           <>
             <RecipeGrid recipes={recipes.data.results} />
             <Pagination
               page={page}
-              totalPages={Math.min(totalPages, 50)}
+              totalPages={totalPages}
               onChange={(nextPage) => {
                 const next = new URLSearchParams(searchParams)
                 next.set('page', String(nextPage))
@@ -194,8 +208,9 @@ function SelectField({
   ...props
 }: {
   label: string
-  options: string[]
+  options: readonly { value: string; labelKey: string }[]
 } & SelectHTMLAttributes<HTMLSelectElement>) {
+  const { t } = useTranslation()
   return (
     <label className="block text-sm font-medium text-stone-700">
       {label}
@@ -203,10 +218,10 @@ function SelectField({
         {...props}
         className="mt-1 h-11 w-full rounded-xl border border-stone-200 bg-cream px-3 text-sm text-ink"
       >
-        <option value="">Any</option>
+        <option value="">{t('filters.any')}</option>
         {options.map((option) => (
-          <option key={option} value={option}>
-            {option}
+          <option key={option.value} value={option.value}>
+            {t(option.labelKey)}
           </option>
         ))}
       </select>
@@ -228,40 +243,5 @@ function NumberField({
         className="mt-1 h-11 w-full rounded-xl border border-stone-200 bg-cream px-3 text-sm text-ink"
       />
     </label>
-  )
-}
-
-function Pagination({
-  page,
-  totalPages,
-  onChange,
-}: {
-  page: number
-  totalPages: number
-  onChange: (page: number) => void
-}) {
-  if (totalPages <= 1) return null
-  return (
-    <div className="mt-8 flex items-center justify-center gap-3">
-      <button
-        type="button"
-        disabled={page <= 1}
-        onClick={() => onChange(page - 1)}
-        className="rounded-full border border-stone-200 px-4 py-2 text-sm disabled:opacity-40"
-      >
-        Previous
-      </button>
-      <p className="text-sm text-muted">
-        Page {page} of {totalPages}
-      </p>
-      <button
-        type="button"
-        disabled={page >= totalPages}
-        onClick={() => onChange(page + 1)}
-        className="rounded-full border border-stone-200 px-4 py-2 text-sm disabled:opacity-40"
-      >
-        Next
-      </button>
-    </div>
   )
 }

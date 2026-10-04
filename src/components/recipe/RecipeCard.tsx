@@ -1,11 +1,7 @@
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useFavorites } from '../../hooks/useFavorites'
 import type { Recipe } from '../../types/recipe'
-
-function formatMinutes(value: number | null): string | null {
-  if (value == null || value < 0) return null
-  return `${value} min`
-}
 
 function Nutrient({ label, value, unit }: { label: string; value?: number; unit: string }) {
   return (
@@ -16,9 +12,13 @@ function Nutrient({ label, value, unit }: { label: string; value?: number; unit:
 }
 
 export function RecipeCard({ recipe }: { recipe: Recipe }) {
+  const { t } = useTranslation()
   const { isFavorite, toggleFavorite } = useFavorites()
   const favorite = isFavorite(recipe.id)
-  const ready = formatMinutes(recipe.readyInMinutes)
+  const ready =
+    recipe.readyInMinutes == null || recipe.readyInMinutes < 0
+      ? null
+      : t('units.minutes', { count: recipe.readyInMinutes })
 
   return (
     <article className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-stone-100 bg-white shadow-[0_8px_30px_rgb(28,25,23,0.06)] transition hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgb(28,25,23,0.08)]">
@@ -33,7 +33,7 @@ export function RecipeCard({ recipe }: { recipe: Recipe }) {
             />
           ) : (
             <div className="flex h-full items-center justify-center bg-gradient-to-br from-stone-100 to-brand/10 text-sm text-muted">
-              Photo coming soon
+              {t('recipe.photoSoon')}
             </div>
           )}
         </div>
@@ -42,10 +42,10 @@ export function RecipeCard({ recipe }: { recipe: Recipe }) {
             {recipe.title}
           </h3>
           <div className="mt-auto flex flex-wrap gap-2">
-            <Nutrient label="Cal" value={recipe.nutrition.calories} unit="" />
-            <Nutrient label="P" value={recipe.nutrition.protein} unit="g" />
-            <Nutrient label="C" value={recipe.nutrition.carbs} unit="g" />
-            <Nutrient label="F" value={recipe.nutrition.fat} unit="g" />
+            <Nutrient label={t('nutrition.short.calories')} value={recipe.nutrition.calories} unit="" />
+            <Nutrient label={t('nutrition.short.protein')} value={recipe.nutrition.protein} unit={t('units.grams')} />
+            <Nutrient label={t('nutrition.short.carbs')} value={recipe.nutrition.carbs} unit={t('units.grams')} />
+            <Nutrient label={t('nutrition.short.fat')} value={recipe.nutrition.fat} unit={t('units.grams')} />
             {ready ? (
               <span className="rounded-full bg-cream px-2.5 py-1 text-xs font-medium text-stone-700">
                 {ready}
@@ -61,7 +61,11 @@ export function RecipeCard({ recipe }: { recipe: Recipe }) {
           toggleFavorite(recipe)
         }}
         aria-pressed={favorite}
-        aria-label={favorite ? `Remove ${recipe.title} from favorites` : `Add ${recipe.title} to favorites`}
+        aria-label={
+          favorite
+            ? t('recipe.favoriteRemove', { title: recipe.title })
+            : t('recipe.favoriteAdd', { title: recipe.title })
+        }
         className="absolute right-3 top-3 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-brand shadow-sm ring-1 ring-stone-200 transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
       >
         <HeartIcon filled={favorite} />

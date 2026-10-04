@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { NavLink, useLocation } from 'react-router-dom'
 import { CATEGORIES } from '../../lib/categories'
+import { categoryCopy } from '../../lib/categoryCopy'
+import { LanguageSwitcher } from '../LanguageSwitcher'
 import { SearchBar } from '../SearchBar'
 
-
 const navItems = [
-  { to: '/', label: 'Home' },
-  { to: '/recipes', label: 'Recipes' },
-  { to: '/category/breakfast', label: 'Categories' },
-]
+  { to: '/', id: 'home' },
+  { to: '/recipes', id: 'recipes' },
+  { to: '/category/breakfast', id: 'categories', category: true },
+] as const
 
 export function Header() {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const location = useLocation()
 
@@ -28,51 +31,54 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-30 border-b border-stone-200/80 bg-white/90 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3 md:px-6">
-        <NavLink to="/" className="font-display text-xl text-ink md:text-2xl">
-          Healthy Recipes
+      <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3 md:gap-4 md:px-6">
+        <NavLink to="/" className="min-w-0 truncate font-display text-xl text-ink md:text-2xl">
+          {t('brand')}
         </NavLink>
-        <nav className="hidden items-center gap-6 md:flex" aria-label="Primary">
+        <nav className="hidden items-center gap-6 md:flex" aria-label={t('nav.primary')}>
           {navItems.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
               className={({ isActive }) => {
                 const active =
-                  item.label === 'Categories'
+                  'category' in item && item.category
                     ? location.pathname.startsWith('/category/')
                     : isActive
                 return `text-sm font-medium ${active ? 'text-brand-dark' : 'text-stone-600 hover:text-ink'}`
               }}
             >
-              {item.label}
+              {t(`nav.${item.id}`)}
             </NavLink>
           ))}
         </nav>
         <div className="ml-auto hidden min-w-0 max-w-md flex-1 items-center gap-3 lg:flex">
           <SearchBar />
         </div>
-        <NavLink
-          to="/search"
-          className="ml-auto rounded-full px-3 py-2 text-sm font-semibold text-stone-700 hover:bg-cream lg:ml-0"
-        >
-          Search
-        </NavLink>
-        <NavLink
-          to="/favorites"
-          className="rounded-full px-3 py-2 text-sm font-semibold text-brand-dark hover:bg-cream"
-        >
-          Favorites
-        </NavLink>
+        <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2 lg:ml-0">
+          <NavLink
+            to="/search"
+            className="hidden rounded-full px-3 py-2 text-sm font-semibold text-stone-700 transition hover:bg-cream sm:inline"
+          >
+            {t('nav.search')}
+          </NavLink>
+          <NavLink
+            to="/favorites"
+            className="hidden rounded-full px-3 py-2 text-sm font-semibold text-brand-dark transition hover:bg-cream sm:inline"
+          >
+            {t('nav.favorites')}
+          </NavLink>
+          <LanguageSwitcher />
+        </div>
         <button
           type="button"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-200 md:hidden"
+          className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-stone-200 md:hidden"
           aria-expanded={open}
           aria-controls="mobile-nav"
-          aria-label={open ? 'Close menu' : 'Open menu'}
+          aria-label={open ? t('nav.closeMenu') : t('nav.openMenu')}
           onClick={() => setOpen((value) => !value)}
         >
-          <span className="sr-only">Menu</span>
+          <span className="sr-only">{t('nav.menu')}</span>
           <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
             {open ? (
               <path
@@ -90,18 +96,23 @@ export function Header() {
       </div>
       {open ? (
         <div id="mobile-nav" className="border-t border-stone-100 bg-white px-4 py-4 md:hidden">
-          <nav className="flex flex-col gap-3" aria-label="Mobile">
+          <nav className="flex flex-col gap-3" aria-label={t('nav.mobile')}>
             {navItems.map((item) => (
               <NavLink key={item.to} to={item.to} className="text-base font-medium text-ink">
-                {item.label}
+                {t(`nav.${item.id}`)}
               </NavLink>
             ))}
+            <NavLink to="/search" className="text-base font-medium text-ink">
+              {t('nav.search')}
+            </NavLink>
             <NavLink to="/favorites" className="text-base font-medium text-ink">
-              Favorites
+              {t('nav.favorites')}
             </NavLink>
           </nav>
           <div className="mt-4">
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted">Categories</p>
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted">
+              {t('nav.categories')}
+            </p>
             <div className="flex flex-wrap gap-2">
               {CATEGORIES.slice(0, 9).map((category) => (
                 <NavLink
@@ -109,7 +120,7 @@ export function Header() {
                   to={`/category/${category.slug}`}
                   className="rounded-full bg-cream px-3 py-1.5 text-sm text-stone-700"
                 >
-                  {category.label}
+                  {categoryCopy(t, category.slug).label}
                 </NavLink>
               ))}
             </div>

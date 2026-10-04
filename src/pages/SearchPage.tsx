@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { Seo } from '../components/Seo'
+import { Pagination } from '../components/Pagination'
 import { SearchBar } from '../components/SearchBar'
 import { RecipeGrid } from '../components/recipe/RecipeGrid'
 import { RecipeGridSkeleton } from '../components/skeletons/RecipeSkeletons'
@@ -12,6 +14,7 @@ import { queryKeys, STALE_TIME } from '../lib/queryKeys'
 import { searchRecipes } from '../services/recipeService'
 
 export function SearchPage() {
+  const { t } = useTranslation()
   const [searchParams, setSearchParams] = useSearchParams()
   const queryFromUrl = searchParams.get('q') ?? ''
   const [query, setQuery] = useState(queryFromUrl)
@@ -55,11 +58,11 @@ export function SearchPage() {
   return (
     <>
       <Seo
-        title={query ? `${query} recipes — Healthy Recipes` : 'Search recipes — Healthy Recipes'}
-        description="Search healthy recipes by name, ingredient, dish, or cuisine."
+        title={query ? t('search.seoTitleQuery', { query }) : t('search.seoTitle')}
+        description={t('search.seoDescription')}
       />
-      <h1 className="font-display text-4xl">Search</h1>
-      <p className="mt-2 text-muted">Find recipes by name, ingredient, dish, or cuisine.</p>
+      <h1 className="font-display text-4xl">{t('search.title')}</h1>
+      <p className="mt-2 text-muted">{t('search.lead')}</p>
       <div className="mt-6 max-w-2xl">
         <SearchBar
           initialQuery={query}
@@ -72,51 +75,25 @@ export function SearchPage() {
         />
       </div>
       <div className="mt-8">
-        {!enabled ? (
-          <EmptyState
-            title="Start typing to search"
-            message="Try “salmon”, “chickpeas”, or “Mediterranean”."
-          />
-        ) : null}
+        {!enabled ? <EmptyState title={t('search.startTitle')} message={t('search.startMessage')} /> : null}
         {enabled && results.isLoading ? <RecipeGridSkeleton /> : null}
         {enabled && results.isError ? (
           <ErrorState
-            title="Search is unavailable"
-            message={friendlyApiMessage(results.error, 'Please try again shortly.')}
+            title={t('search.unavailableTitle')}
+            message={friendlyApiMessage(results.error, 'errors.searchFallback')}
           />
         ) : null}
         {enabled && results.data && results.data.results.length === 0 ? (
-          <EmptyState
-            title="No recipes found"
-            message="Try a different ingredient or a simpler dish name."
-          />
+          <EmptyState title={t('search.emptyTitle')} message={t('search.emptyMessage')} />
         ) : null}
         {enabled && results.data && results.data.results.length > 0 ? (
           <>
             <RecipeGrid recipes={results.data.results} />
-            {totalPages > 1 ? (
-              <div className="mt-8 flex items-center justify-center gap-3">
-                <button
-                  type="button"
-                  disabled={page <= 1}
-                  onClick={() => setSearchParams({ q: query, page: String(page - 1) })}
-                  className="rounded-full border border-stone-200 px-4 py-2 text-sm disabled:opacity-40"
-                >
-                  Previous
-                </button>
-                <p className="text-sm text-muted">
-                  Page {page} of {Math.min(totalPages, 50)}
-                </p>
-                <button
-                  type="button"
-                  disabled={page >= Math.min(totalPages, 50)}
-                  onClick={() => setSearchParams({ q: query, page: String(page + 1) })}
-                  className="rounded-full border border-stone-200 px-4 py-2 text-sm disabled:opacity-40"
-                >
-                  Next
-                </button>
-              </div>
-            ) : null}
+            <Pagination
+              page={page}
+              totalPages={totalPages}
+              onChange={(nextPage) => setSearchParams({ q: query, page: String(nextPage) })}
+            />
           </>
         ) : null}
       </div>
