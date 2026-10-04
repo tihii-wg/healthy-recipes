@@ -30,7 +30,7 @@ export function Header() {
     <header className="sticky top-0 z-30 border-b border-stone-200/80 bg-white/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3 md:px-6">
         <NavLink to="/" className="font-display text-xl text-ink md:text-2xl">
-          Healthy Recipe
+          Healthy Recipes
         </NavLink>
         <nav className="hidden items-center gap-6 md:flex" aria-label="Primary">
           {navItems.map((item) => (

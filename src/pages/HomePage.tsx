@@ -38,7 +38,7 @@ export function HomePage() {
   return (
     <>
       <Seo
-        title="Healthy Recipe — Eat better. Feel better."
+        title="Healthy Recipes — Eat better. Feel better."
         description="Discover healthy recipes tailored to your lifestyle, from high-protein dinners to simple vegetarian lunches."
       />
       <section className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">

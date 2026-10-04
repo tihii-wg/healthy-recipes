@@ -55,7 +55,7 @@ export function SearchPage() {
   return (
     <>
       <Seo
-        title={query ? `${query} recipes — Healthy Recipe` : 'Search recipes — Healthy Recipe'}
+        title={query ? `${query} recipes — Healthy Recipes` : 'Search recipes — Healthy Recipes'}
         description="Search healthy recipes by name, ingredient, dish, or cuisine."
       />
       <h1 className="font-display text-4xl">Search</h1>

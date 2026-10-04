@@ -71,7 +71,7 @@ export function RecipeDetailsPage() {
 
   return (
     <>
-      <Seo title={`${recipe.title} — Healthy Recipe`} description={description.slice(0, 160)} />
+      <Seo title={`${recipe.title} — Healthy Recipes`} description={description.slice(0, 160)} />
       <article>
         <div className="overflow-hidden rounded-[2rem] bg-stone-100 shadow-sm">
           {recipe.image ? (

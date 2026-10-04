@@ -10,7 +10,7 @@ export function FavoritesPage() {
   return (
     <>
       <Seo
-        title="Favorite recipes — Healthy Recipe"
+        title="Favorite recipes — Healthy Recipes"
         description="Recipes you saved on this device. Favorites stay in your browser — no account needed."
       />
       <h1 className="font-display text-4xl">Favorites</h1>
