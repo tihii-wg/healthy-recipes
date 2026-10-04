@@ -1,6 +1,6 @@
-import { apiError, type ApiResult } from './errors'
-import { parseRandomParams, parseRecipeId, parseSearchParams } from './validate'
-import { spoonacularGet } from './spoonacular'
+import { apiError, type ApiResult } from './errors.js'
+import { parseRandomParams, parseRecipeId, parseSearchParams } from './validate.js'
+import { spoonacularGet } from './spoonacular.js'
 
 function recipeIdFromPath(pathname: string): string | null {
   const match = pathname.match(/^\/api\/recipes\/(\d+)\/?$/)

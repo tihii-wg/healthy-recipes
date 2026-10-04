@@ -1,4 +1,4 @@
-import { apiError, type ApiResult } from './errors'
+import { apiError, type ApiResult } from './errors.js'
 
 const SPOONACULAR_BASE = 'https://api.spoonacular.com'
 

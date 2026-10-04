@@ -5,7 +5,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-import { handleRecipeApi } from './server/handleRecipeApi'
+import { handleRecipeApi } from './server/handleRecipeApi.js'
 
 function attachRecipeApi(
   server: ViteDevServer | PreviewServer,
