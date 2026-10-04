@@ -37,11 +37,28 @@ export async function spoonacularGet(
   }
 
   if (response.status === 402 || response.status === 429) {
-    return apiError(
-      429,
-      'rate_limit',
-      'We are receiving a lot of recipe requests right now. Please wait a moment and try again.',
+    const quotaRequest = response.headers.get('X-API-Quota-Request')
+    const quotaUsed = response.headers.get('X-API-Quota-Used')
+    const quotaLeft = response.headers.get('X-API-Quota-Left')
+
+    console.log(
+      `Spoonacular diagnostic: status=${response.status}, quotaRequest=${quotaRequest}, quotaUsed=${quotaUsed}, quotaLeft=${quotaLeft}`,
     )
+
+    // Keep the normal app-facing 429/rate_limit behavior, but include temporary
+    // diagnostics so we can tell 402 vs 429 and inspect remaining quota.
+    return {
+      status: 429,
+      body: {
+        error: 'rate_limit',
+        message:
+          'We are receiving a lot of recipe requests right now. Please wait a moment and try again.',
+        spoonacularStatus: response.status,
+        quotaRequest,
+        quotaUsed,
+        quotaLeft,
+      },
+    }
   }
 
   if (response.status === 401 || response.status === 403) {
