@@ -113,7 +113,7 @@ export function RecipesPage() {
   return (
     <>
       <Seo
-        title="Discover recipes — Healthy Recipes"
+        title="Discover recipes — Healthy Recipe"
         description="Browse healthy recipes and filter by meal type, diet, cuisine, calories, protein, carbs, fat, and prep time."
       />
       <h1 className="font-display text-4xl">Discover recipes</h1>

@@ -16,7 +16,7 @@ export function Layout() {
       </main>
       <footer className="border-t border-stone-200 bg-white">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-8 text-sm text-muted md:flex-row md:items-center md:justify-between md:px-6">
-          <p>Healthy Recipes — eat well with simple, nourishing cooking.</p>
+          <p>Healthy Recipe — eat well with simple, nourishing cooking.</p>
           <p>Recipe data provided for discovery. Always cook to your own taste.</p>
         </div>
       </footer>

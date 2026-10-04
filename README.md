@@ -1,4 +1,4 @@
-# Healthy Recipes
+# Healthy Recipe
 
 A polished healthy-food recipe app. The browser talks only to this app’s API. Spoonacular stays on the server.
 

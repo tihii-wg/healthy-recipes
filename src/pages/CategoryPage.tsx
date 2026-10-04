@@ -48,7 +48,7 @@ export function CategoryPage() {
   return (
     <>
       <Seo
-        title={`${definition.label} recipes — Healthy Recipes`}
+        title={`${definition.label} recipes — Healthy Recipe`}
         description={definition.description}
       />
       <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand">Category</p>
