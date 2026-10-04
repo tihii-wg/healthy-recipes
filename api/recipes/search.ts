@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { handleRecipeApi } from '../../server/handleRecipeApi'
-import { getSearchParams } from '../../server/requestParams'
+import { handleRecipeApi } from '../../server/handleRecipeApi.js'
+import { getSearchParams } from '../../server/requestParams.js'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
