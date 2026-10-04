@@ -3,6 +3,8 @@ import { NavLink, useLocation } from 'react-router-dom'
 import { CATEGORIES } from '../../lib/categories'
 import { SearchBar } from '../SearchBar'
 
+//еусе
+
 const navItems = [
   { to: '/', label: 'Home' },
   { to: '/recipes', label: 'Recipes' },
