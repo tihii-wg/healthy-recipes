@@ -53,7 +53,10 @@ export async function handleRecipeApi(
 
     return spoonacularGet('/recipes/random', {
       number: parsed.data.number ?? 8,
+      includeNutrition: 'true',
+      // Spoonacular documents this as include-tags; tags is the older alias.
       tags: parsed.data.tags,
+      'include-tags': parsed.data.tags,
     })
   }
 

@@ -40,6 +40,7 @@ export type SpoonacularRecipe = {
   diets?: string[]
   extendedIngredients?: SpoonacularIngredient[]
   analyzedInstructions?: SpoonacularInstructionBlock[]
+  instructions?: string
   nutrition?: {
     nutrients?: SpoonacularNutrient[]
   }
@@ -84,14 +85,34 @@ function mapIngredients(raw: SpoonacularRecipe): RecipeIngredient[] {
   }))
 }
 
+function instructionsFromText(value?: string): RecipeInstruction[] {
+  if (!value?.trim()) return []
+
+  const listItems = [...value.matchAll(/<li[^>]*>([\s\S]*?)<\/li>/gi)]
+    .map((match) => stripHtml(match[1]))
+    .filter(Boolean)
+
+  const chunks =
+    listItems.length > 0
+      ? listItems
+      : stripHtml(value.replace(/<\/(p|div|li|h[1-6]|br)>/gi, '\n').replace(/<br\s*\/?>/gi, '\n'))
+          .split(/\n+/)
+          .map((line) => line.replace(/^\d+[).\s-]+/, '').trim())
+          .filter(Boolean)
+
+  return chunks.map((step, index) => ({ number: index + 1, step }))
+}
+
 function mapInstructions(raw: SpoonacularRecipe): RecipeInstruction[] {
   const steps = raw.analyzedInstructions?.flatMap((block) => block.steps ?? []) ?? []
-  return steps
+  const mapped = steps
     .filter((step) => step.step?.trim())
     .map((step, index) => ({
       number: step.number ?? index + 1,
-      step: step.step!.trim(),
+      step: stripHtml(step.step),
     }))
+  if (mapped.length > 0) return mapped
+  return instructionsFromText(raw.instructions)
 }
 
 export function mapSpoonacularRecipe(raw: SpoonacularRecipe): Recipe | null {

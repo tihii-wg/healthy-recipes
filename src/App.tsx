@@ -8,11 +8,20 @@ import { RecipeDetailsPage } from './pages/RecipeDetailsPage'
 import { SearchPage } from './pages/SearchPage'
 import { CategoryPage } from './pages/CategoryPage'
 import { FavoritesPage } from './pages/FavoritesPage'
+import { RecipeApiError } from './types/recipe'
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 1,
+      retry: (failureCount, error) => {
+        if (
+          error instanceof RecipeApiError &&
+          (error.code === 'rate_limit' || error.code === 'not_found' || error.code === 'invalid')
+        ) {
+          return false
+        }
+        return failureCount < 1
+      },
       refetchOnWindowFocus: false,
     },
   },
